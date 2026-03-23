@@ -23,11 +23,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: yarn
-          cache-dependency-path: 1-DevOps/idempotweet/yarn.lock
       - name: Enable Corepack
         run: corepack enable
         working-directory: .
+      - name: Activate Yarn 4
+        run: corepack prepare yarn@4.12.0 --activate
+        working-directory: .
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            1-DevOps/idempotweet/.yarn/cache
+            1-DevOps/idempotweet/.yarn/unplugged
+          key: ${{ runner.os }}-yarn-${{ hashFiles('1-DevOps/idempotweet/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install dependencies
         run: yarn install --immutable
       - name: Run tests
