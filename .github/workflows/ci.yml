@@ -1,9 +1,14 @@
 name: CI
 
 on:
-  pull_request:
-    paths:
-      - 1-DevOps/idempotweet/**
+#   pull_request:
+#     paths:
+#       - 1-DevOps/idempotweet/**
+  push:
+    branches:
+      - main
+    # paths:
+    #   - 1-DevOps/idempotweet/**
   workflow_call:
 
 jobs:
