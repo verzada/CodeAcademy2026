@@ -1,0 +1,36 @@
+jobs:
+  build:
+    defaults:
+        run:
+            working-directory: 1-DevOps/idempotweet-app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: CorePack enable
+        run: corepack enable
+        working-directory: .
+      - name: yarn install
+        run: yarn install --immutable
+      - name: Run tests
+        run: npm test
+      - name: yarn testcoverage
+        run: yarn test:coverage
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+            projectBaseDir: 1-DevOps/idempotweet-app
+        env:
+           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+name: idempotweet-app
+on:
+  pull_request:
+    paths:
+      - 1-DevOps/idempotweet-app/**
+  workflow_call:
