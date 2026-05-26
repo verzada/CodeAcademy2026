@@ -1,0 +1,47 @@
+@host = http://localhost:5035
+@createdOrderId = {{createOrder.response.body.$.id}}
+
+### Hent kaffemeny
+# @name menu
+GET {{host}}/menu
+Accept: application/json
+
+### Se den genererte OpenAPI-spesifikasjonen (åpne i browser)
+# {{host}}/openapi/v1.json
+
+### Åpne Scalar UI (åpne i browser)
+# {{host}}/scalar/v1
+
+
+# @name createOrder
+POST {{host}}/orders
+Content-Type: application/json
+Accept: application/json
+
+{
+  "customerName": "Vamos",
+  "coffeId": "{{menu.response.body.$[0].id}}",
+  "quantity": 1,
+  "size": 1,
+  "milkType": 1,
+  "extraShot": false
+}
+
+### Hent order via Location-header
+GET {{host}}/orders/{{createdOrderId}}
+Accept: application/json
+
+PATCH  {{host}}/orders/{{createdOrderId}}?status=PENDING
+Accept: application/json
+
+GET {{host}}/orders/{{createdOrderId}}
+Accept: application/json
+
+PATCH  {{host}}/orders/{{createdOrderId}}?status=BREWING
+Accept: application/json
+
+GET {{host}}/orders/{{createdOrderId}}
+Accept: application/json
+
+PATCH {{host}}/orders/{{createdOrderId}}?status=READY
+Accept: application/json
