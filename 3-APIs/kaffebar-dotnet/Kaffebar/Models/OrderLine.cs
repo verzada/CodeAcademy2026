@@ -1,15 +1,11 @@
-﻿using Kaffebar.Models;
-using System.ComponentModel.DataAnnotations;
-
-namespace Kaffebar.DTO
+﻿namespace Kaffebar.Models
 {
-    public class NewOrder
+    public class OrderLine
     {
-        [Required(ErrorMessage = "Kundenavn må være spesifisert i ordren")]
-        [StringLength(maximumLength: 100, MinimumLength = 2)]
-        public required string CustomerName { get; set; }
+        public Guid Id { get; set; }
+        public int Quantity { get; set; }
+        public OrderItem OrderItem { get; set; }
 
-        public List<OrderLine>? OrderLines { get; set; }
 
 
         //[Required(ErrorMessage = "Kaffe må være spesifisert i ordren")]
@@ -20,5 +16,6 @@ namespace Kaffebar.DTO
         //public OrderSize Size { get; set; }
         //public MilkType? MilkType { get; set; }
         //public bool? ExtraShot { get; set; }
+
     }
 }

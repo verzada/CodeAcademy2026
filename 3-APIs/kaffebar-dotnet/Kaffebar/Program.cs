@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // automatisk basert på endepunktene og typene i prosjektet (code-first).
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
-builder.Services.AddValidation();
 builder.Services.AddProblemDetails();
 
 // Register in-memory order repository as singleton
@@ -24,6 +23,8 @@ if (app.Environment.IsDevelopment())
     // Scalar gir et moderne, interaktivt UI på /scalar/v1
     // for å utforske og teste API-et.
     app.MapScalarApiReference();
+
+    app.UseDeveloperExceptionPage();
 }
 
 // --- Hello Coffee --------------------------------------------------------
@@ -42,11 +43,13 @@ app.MapGet("/menu", MenuController.GetMenu)
 //}
 //).WithName("OrderCoffee").WithSummary("Bestill kaffe").WithDescription("Lager en kaffeordre hos kaffebaren");
 app.MapControllers();
+app.UseExceptionHandler();
 app.UseStatusCodePages();
+
 
 app.Run();
 
 // DTO-er kan ligge i Program.cs når prosjektet er lite.
 // Etter hvert er det ryddig å flytte dem til egne filer i en Models-mappe.
-public record Coffee(Guid Id, string Name, decimal Price);
+//public record Coffee(Guid Id, string Name, decimal Price);
 //public record Order(Guid id, Guid CoffeeId);

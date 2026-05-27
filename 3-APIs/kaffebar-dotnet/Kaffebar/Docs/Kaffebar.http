@@ -31,17 +31,22 @@ Accept: application/json
 GET {{host}}/orders/{{createdOrderId}}
 Accept: application/json
 
+### Update order after PENDING
 PATCH  {{host}}/orders/{{createdOrderId}}?status=PENDING
 Accept: application/json
 
+### Verify order after PENDING
 GET {{host}}/orders/{{createdOrderId}}
 Accept: application/json
 
+### Update order to BREWING
 PATCH  {{host}}/orders/{{createdOrderId}}?status=BREWING
 Accept: application/json
 
+### Verify order after BREWING
 GET {{host}}/orders/{{createdOrderId}}
 Accept: application/json
 
+### Update order to READY
 PATCH {{host}}/orders/{{createdOrderId}}?status=READY
 Accept: application/json

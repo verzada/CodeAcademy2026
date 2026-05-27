@@ -19,6 +19,18 @@ namespace Kaffebar.Services
             return _orders.Values;
         }
 
+        public IEnumerable<Order> GetAll(OrderQuery query)
+        {
+            var result = _orders.Values.AsEnumerable();
+
+            if (query.Status.HasValue)
+            {
+                result = result.Where(o => o.Status == query.Status.Value);
+            }
+
+            return result.Skip(query.Offset).Take(query.Limit);
+        }
+
         public Order Add(Order order)
         {
             _orders.TryAdd(order.Id, order);

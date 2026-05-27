@@ -18,7 +18,7 @@ namespace Kaffebar.Controllers
         }
 
         [HttpGet("{orderId:guid}")]
-        public async Task<Results<Ok<Order>, NotFound, ValidationProblem>> Get(Guid orderId)
+        public async Task<Results<Ok<Order>, NotFound<Guid>, ValidationProblem>> Get(Guid orderId)
         {
             if (orderId == Guid.Empty)
             {
@@ -34,25 +34,33 @@ namespace Kaffebar.Controllers
 
             if (order == null)
             {
-                return TypedResults.NotFound();
+                return TypedResults.NotFound(orderId);
             }
 
             return TypedResults.Ok(order);
         }
 
-        [HttpPost()]
+        [HttpGet]
+        public async Task<Results<Ok<List<Order>>, BadRequest>> Get([AsParameters] OrderQuery orderQuery)
+        {
+            var orders = _orderRepository.GetAll(orderQuery).ToList();
+            return TypedResults.Ok(orders);
+        }
+
+        [HttpPost]
         public async Task<Results<Created<Order>, BadRequest>> Post(NewOrder newOrder)
         {
             var order = new Order()
             {
                 Id = Guid.NewGuid(),
                 CustomerName = newOrder.CustomerName,
-                CoffeId = newOrder.CoffeId,
-                Quantity = newOrder.Quantity,
-                Size = newOrder.Size,
-                MilkType = newOrder.MilkType,
-                ExtraShot = newOrder.ExtraShot,
-                Status = OrderStatus.PENDING
+                //CoffeId = newOrder.CoffeId,
+                //Quantity = newOrder.Quantity,
+                //Size = newOrder.Size,
+                //MilkType = newOrder.MilkType,
+                //ExtraShot = newOrder.ExtraShot,
+                Status = OrderStatus.PENDING,
+                OrderLine = newOrder.OrderLines
             };
 
 
@@ -61,12 +69,12 @@ namespace Kaffebar.Controllers
         }
 
         [HttpPatch("{orderId:guid}")]
-        public async Task<Results<Ok, NotFound, BadRequest>> Patch(Guid orderId, [FromQuery] string status)
+        public async Task<Results<Ok, NotFound<Guid>, BadRequest>> Patch(Guid orderId, [FromQuery] string status)
         {
             var entityOrder = _orderRepository.GetById(orderId);
             if (entityOrder == null)
             {
-                return TypedResults.NotFound();
+                return TypedResults.NotFound(orderId);
             }
 
             if (Enum.TryParse<OrderStatus>(status, true, out var patchedStatus))

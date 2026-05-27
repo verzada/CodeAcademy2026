@@ -8,5 +8,8 @@ namespace Kaffebar.Models
         public Guid Id { get; set; }
 
         public OrderStatus Status { get; set; }
+
+        [Range(1,int.MaxValue)]
+        public required List<OrderLine> OrderLine { get; set; }
     }
 }
